@@ -52,7 +52,7 @@
       </div>
 
       <div class="text-center mt-12">
-        <NuxtLink to="/" class="btn btn-primary btn-lg">
+        <NuxtLink to="/public" class="btn btn-primary btn-lg">
           🚀 Coba Sekarang
         </NuxtLink>
       </div>

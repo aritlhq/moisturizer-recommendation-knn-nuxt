@@ -8,8 +8,8 @@
     "generate": "nuxt generate",
     "preview": "nuxt preview",
     "postinstall": "nuxt prepare",
-    "import-data": "node server/scripts/importData.js",
-    "create-admin": "node server/scripts/createAdmin.js",
+    "import-data": "node scripts/importData.js",
+    "create-admin": "node scripts/createAdmin.js",
     "setup-ml": "cd scripts && python train_model.py"
   },
   "dependencies": {
