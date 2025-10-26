@@ -52,7 +52,7 @@
       </div>
 
       <div class="flex justify-center">
-        <NuxtLink to="/public" class="btn btn-outline btn-lg">
+        <NuxtLink to="/" class="btn btn-outline btn-lg">
           Cari Lagi
         </NuxtLink>
       </div>
