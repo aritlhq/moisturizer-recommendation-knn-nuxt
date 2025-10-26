@@ -1,44 +1,53 @@
-const bcrypt = require('bcrypt');
-const db = require('../config/db');
-
+import bcrypt from 'bcrypt';
+import mysql from 'mysql2/promise';
+import 'dotenv/config';
 async function createAdmin() {
-  try {
-    const username = 'admin';
-    const password = 'admin123';
+    let pool;
+    try {
+        pool = mysql.createPool({
+            host: process.env.NUXT_DB_HOST,
+            port: process.env.NUXT_DB_PORT,
+            user: process.env.NUXT_DB_USER,
+            password: process.env.NUXT_DB_PASSWORD,
+            database: process.env.NUXT_DB_NAME,
+        });
 
-    console.log('🔐 Membuat admin user...\n');
+        const username = 'admin';
+        const password = 'admin123';
 
-    const hashedPassword = await bcrypt.hash(password, 10);
+        console.log('🔐 Membuat admin user...\n');
 
-    const [existing] = await db.query(
-      'SELECT id FROM users WHERE username = ?',
-      [username]
-    );
+        const hashedPassword = await bcrypt.hash(password, 10);
 
-    if (existing.length > 0) {
-      await db.query(
-        'UPDATE users SET password = ? WHERE username = ?',
-        [hashedPassword, username]
-      );
-      console.log('✅ Admin user berhasil diupdate!');
-    } else {
-      await db.query(
-        'INSERT INTO users (username, password, role) VALUES (?, ?, ?)',
-        [username, hashedPassword, 'admin']
-      );
-      console.log('✅ Admin user berhasil dibuat!');
+        const [existing] = await pool.query(
+            'SELECT id FROM users WHERE username = ?',
+            [username]
+        );
+
+        if (existing.length > 0) {
+            await pool.query(
+                'UPDATE users SET password = ? WHERE username = ?',
+                [hashedPassword, username]
+            );
+            console.log('✅ Admin user berhasil diupdate!');
+        } else {
+            await pool.query(
+                'INSERT INTO users (username, password, role) VALUES (?, ?, ?)',
+                [username, hashedPassword, 'admin']
+            );
+            console.log('✅ Admin user berhasil dibuat!');
+        }
+
+        console.log('\nKredensial login:');
+        console.log(`   Username: ${username}`);
+        console.log(`   Password: ${password}\n`);
+
+    } catch (error) {
+        console.error('❌ Error:', error);
+    } finally {
+        if (pool) await pool.end();
+        process.exit(0);
     }
-
-    console.log('\nKredensial login:');
-    console.log(`   Username: ${username}`);
-    console.log(`   Password: ${password}`);
-    console.log('\n⚠️  Jangan lupa ganti password untuk production!\n');
-
-    process.exit(0);
-  } catch (error) {
-    console.error('❌ Error:', error);
-    process.exit(1);
-  }
 }
 
 createAdmin();

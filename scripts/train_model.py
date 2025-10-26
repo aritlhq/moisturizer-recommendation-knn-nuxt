@@ -151,7 +151,7 @@ def main():
     
     # Path ke dataset (relatif dari scripts/)
     script_dir = os.path.dirname(os.path.abspath(__file__))
-    dataset_path = os.path.join(script_dir, '../../dataset.csv')
+    dataset_path = os.path.join(script_dir, '../dataset.csv')
     
     if not os.path.exists(dataset_path):
         print(f"❌ Error: dataset.csv tidak ditemukan di {dataset_path}")
