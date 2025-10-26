@@ -1,7 +1,3 @@
-# Setup Python Environment untuk ML Model
-# Author: Abdullah Rendra Zuriansyah
-# Usage: powershell -ExecutionPolicy Bypass -File setup_python.ps1
-
 Write-Host ""
 Write-Host "=============================================" -ForegroundColor Cyan
 Write-Host "   PYTHON ML ENVIRONMENT SETUP" -ForegroundColor Cyan

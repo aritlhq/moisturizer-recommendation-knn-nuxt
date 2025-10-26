@@ -22,7 +22,7 @@
 
     <div>
       <div v-if="activeTab === 'skin'" class="space-y-3">
-        <details v-for="skinType in skinTypes" :key="skinType.name" class="p-4 rounded-lg bg-cream-100 group">
+        <details v-for="skinType in skinTypes" :key="skinType.name" class="p-4 rounded-lg bg-cream-100 group" open>
           <summary class="font-semibold text-lg flex items-center gap-2 cursor-pointer list-none">
             <span class="text-2xl">{{ skinType.icon }}</span> {{ skinType.name }}
           </summary>
@@ -42,7 +42,7 @@
         <div v-for="ingredient in ingredients" :key="ingredient.name" class="p-6 bg-cream-100 rounded-lg">
           <h3 class="font-bold text-xl text-peach-500 mb-2">{{ ingredient.icon }} {{ ingredient.name }}</h3>
           <p class="text-sm text-content-light mb-3">{{ ingredient.benefit }}</p>
-          <span class="inline-block px-3 py-1 text-sm rounded-full border border-peach-300 text-peach-500">Cocok untuk: {{ ingredient.suitable }}</span>
+          <span class="inline-block px-3 py-1 text-sm rounded-full border border-pink-300 text-pink-500">Cocok untuk: {{ ingredient.suitable }}</span>
         </div>
       </div>
     </div>

@@ -1,48 +1,49 @@
 <template>
-  <div class="min-h-screen flex items-center justify-center bg-base-200 px-4">
-    <div class="card w-full max-w-md bg-base-100 shadow-2xl">
-      <div class="card-body">
-        <div class="text-center mb-6">
-          <h2 class="text-3xl font-bold text-primary">🔐 Admin Login</h2>
+  <div class="min-h-screen flex items-center justify-center bg-cream-100 p-4">
+    <div class="w-full max-w-md bg-white shadow-2xl rounded-2xl p-8">
+      <div class="text-center mb-8">
+        <h2 class="text-3xl font-bold text-pink-500">🔐 Admin Login</h2>
+        <p class="text-content-light mt-2">Selamat datang kembali, Admin.</p>
+      </div>
+
+      <form @submit.prevent="handleLogin" class="space-y-6">
+        <div>
+          <label for="username" class="block text-sm font-medium text-content mb-2">Username</label>
+          <input
+              id="username"
+              v-model="form.username"
+              type="text"
+              class="input"
+              required
+          />
         </div>
 
-        <form @submit.prevent="handleLogin" class="space-y-4">
-          <div class="form-control">
-            <label class="label"><span class="label-text">Username</span></label>
-            <input
-                v-model="form.username"
-                type="text"
-                class="input input-bordered"
-                required
-            />
-          </div>
+        <div>
+          <label for="password" class="block text-sm font-medium text-content mb-2">Password</label>
+          <input
+              id="password"
+              v-model="form.password"
+              type="password"
+              class="input"
+              required
+          />
+        </div>
 
-          <div class="form-control">
-            <label class="label"><span class="label-text">Password</span></label>
-            <input
-                v-model="form.password"
-                type="password"
-                class="input input-bordered"
-                required
-            />
-          </div>
+        <div v-if="errorMessage" class="bg-red-100 border-l-4 border-error text-error p-4 rounded-md text-sm">
+          <span>{{ errorMessage }}</span>
+        </div>
 
-          <div v-if="errorMessage" class="alert alert-error text-sm">
-            <span>{{ errorMessage }}</span>
-          </div>
-
-          <div class="form-control mt-6">
-            <button
-                type="submit"
-                class="btn btn-primary"
-                :disabled="loading"
-            >
-              <span v-if="loading" class="loading loading-spinner"></span>
-              Login
-            </button>
-          </div>
-        </form>
-      </div>
+        <div class="pt-2">
+          <button
+              type="submit"
+              class="btn btn-primary w-full"
+              :disabled="loading"
+          >
+            <span v-if="loading" class="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin mr-2"></span>
+            {{ loading ? 'Memproses...' : 'Login' }}
+          </button>
+        </div>
+      </form>
     </div>
   </div>
 </template>

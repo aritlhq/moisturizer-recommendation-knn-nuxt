@@ -1,8 +1,4 @@
 @echo off
-REM Setup Python Environment untuk ML Model
-REM Author: Abdullah Rendra Zuriansyah
-REM Usage: setup_python.bat
-
 echo.
 echo =============================================
 echo    PYTHON ML ENVIRONMENT SETUP

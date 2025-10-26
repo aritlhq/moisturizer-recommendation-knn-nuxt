@@ -16,27 +16,32 @@ module.exports = {
             },
             colors: {
                 'pink': {
-                    50: '#FEF7F9',
-                    100: '#FCEEF0',
-                    200: '#F9E4E8',
-                    300: '#F8E2DC',
-                    400: '#F5C0A7',
-                    500: '#F4ABC4',
-                    600: '#D885A3',
+                    50: '#FFF5F7',  // Latar belakang sangat terang
+                    100: '#FFE4E6', // Highlight ringan
+                    200: '#FECDD3',
+                    300: '#FDA4AF',
+                    400: '#FB7185',
+                    500: '#E11D48', // PRIMARY BARU: Jauh lebih gelap & kuat (Rose-600 ish)
+                    600: '#BE123C', // HOVER STATE: Lebih gelap lagi
+                    700: '#9F1239', // TEXT HEADINGS: Kontras tinggi untuk teks
+                    800: '#881337',
+                    900: '#4C0519',
                 },
-                'peach': {
-                    400: '#F5C0A7',
-                },
+                // 'peach': {
+                //     400: '#FB923C', // Dibuat sedikit lebih orange agar beda dengan pink
+                //     500: '#F97316',
+                //     600: '#EA580C',
+                // },
                 'cream': {
-                    50: '#FEF7F9',
-                    100: '#FCEEF0',
+                    50: '#FFFAFB', // Hampir putih, hint pink sangat tipis
+                    100: '#FFF5F7',
                 },
                 'content': {
-                    DEFAULT: '#4A3F3F',
-                    light: '#A49393',
+                    DEFAULT: '#374151', // Gray-700: Lebih gelap dari sebelumnya untuk teks isi
+                    light: '#6B7280',   // Gray-500: Untuk teks sekunder
                 },
-                'success': '#64B39A',
-                'error': '#D87777',
+                'success': '#059669', // Emerald-600
+                'error': '#DC2626',   // Red-600
             }
         },
     },

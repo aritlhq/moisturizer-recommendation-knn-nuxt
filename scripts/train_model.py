@@ -1,11 +1,3 @@
-"""
-train_model.py
-Script untuk training model KNN menggunakan dataset moisturizer
-
-Author: Abdullah Rendra Zuriansyah
-Usage: python train_model.py
-"""
-
 import pandas as pd
 import numpy as np
 from sklearn.neighbors import NearestNeighbors
