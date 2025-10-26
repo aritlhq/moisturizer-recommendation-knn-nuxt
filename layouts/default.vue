@@ -2,14 +2,14 @@
   <div class="min-h-screen bg-base-100 flex flex-col">
     <nav class="navbar bg-gradient-to-r from-primary to-secondary text-white shadow-lg sticky top-0 z-50">
       <div class="navbar-start">
-        <NuxtLink to="/public" class="btn btn-ghost normal-case text-lg lg:text-xl font-bold">
+        <NuxtLink to="/" class="btn btn-ghost normal-case text-lg lg:text-xl font-bold">
           💧 Moisturizer Finder
         </NuxtLink>
       </div>
 
       <div class="navbar-center hidden lg:flex">
         <ul class="menu menu-horizontal px-1">
-          <li><NuxtLink to="/public" class="hover:bg-white/20">Home</NuxtLink></li>
+          <li><NuxtLink to="/" class="hover:bg-white/20">Home</NuxtLink></li>
           <li><NuxtLink to="/about" class="hover:bg-white/20">About</NuxtLink></li>
         </ul>
       </div>
