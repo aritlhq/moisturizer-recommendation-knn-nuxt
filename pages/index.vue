@@ -1,9 +1,9 @@
 <template>
   <div class="container mx-auto px-4 py-12">
-    <div class="hero min-h-[70vh] bg-gradient-to-br from-primary/20 via-secondary/10 to-accent/20 rounded-3xl mb-12">
+    <div class="hero min-h-[70vh] bg-accent/50 rounded-3xl mb-12">
       <div class="hero-content text-center">
         <div class="max-w-3xl">
-          <h1 class="text-5xl md:text-6xl lg:text-7xl font-display font-bold mb-6 bg-gradient-to-r from-primary via-secondary to-accent bg-clip-text text-transparent leading-tight">
+          <h1 class="text-5xl md:text-6xl lg:text-7xl font-display font-bold mb-6 text-primary leading-tight">
             Temukan Moisturizer Perfect Match! 💧
           </h1>
           <p class="text-lg md:text-xl text-base-content/80 mb-8 max-w-2xl mx-auto">
@@ -13,7 +13,7 @@
             <button @click="scrollToForm" class="btn btn-primary btn-lg gap-2">
               Mulai Sekarang - Gratis!
             </button>
-            <button @click="scrollToIntro" class="btn btn-outline btn-lg gap-2">
+            <button @click="scrollToIntro" class="btn btn-outline btn-secondary btn-lg gap-2">
               Pelajari Dulu
             </button>
           </div>

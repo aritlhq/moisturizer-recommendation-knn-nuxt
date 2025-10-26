@@ -1,85 +1,49 @@
 <template>
-  <div class="card bg-gradient-to-br from-pink-50 to-purple-50 shadow-xl">
-    <div class="card-body">
-      <div class="text-center mb-6">
-        <h2 class="card-title text-3xl font-bold text-primary justify-center mb-2">
-          ✨ Kenali Kulitmu, Temukan Moisturizer yang Tepat!
-        </h2>
-        <p class="text-base-content/70">
-          Pelajari dasar skincare sebelum memilih produk yang cocok untukmu
-        </p>
+  <div class="bg-white rounded-2xl shadow-xl p-8">
+    <div class="text-center mb-8">
+      <h2 class="text-3xl font-bold text-pink-500 mb-2">
+        ✨ Kenali Kulitmu, Temukan Moisturizer yang Tepat!
+      </h2>
+      <p class="text-content-light">
+        Pelajari dasar skincare sebelum memilih produk yang cocok untukmu
+      </p>
+    </div>
+    <div class="flex justify-center border-b border-gray-200 mb-6">
+      <button
+          v-for="tab in tabs"
+          :key="tab.id"
+          class="px-6 py-3 text-lg font-semibold border-b-2 transition-colors"
+          :class="activeTab === tab.id ? 'border-pink-500 text-pink-500' : 'border-transparent text-content-light hover:text-content'"
+          @click="activeTab = tab.id"
+      >
+        {{ tab.icon }} {{ tab.label }}
+      </button>
+    </div>
+
+    <div>
+      <div v-if="activeTab === 'skin'" class="space-y-3">
+        <details v-for="skinType in skinTypes" :key="skinType.name" class="p-4 rounded-lg bg-cream-100 group">
+          <summary class="font-semibold text-lg flex items-center gap-2 cursor-pointer list-none">
+            <span class="text-2xl">{{ skinType.icon }}</span> {{ skinType.name }}
+          </summary>
+          <p class="text-content-light mt-2 pl-8">{{ skinType.description }}</p>
+        </details>
       </div>
-      <div class="tabs tabs-boxed bg-white/50 mb-6">
-        <a
-            v-for="tab in tabs"
-            :key="tab.id"
-            class="tab"
-            :class="{ 'tab-active': activeTab === tab.id }"
-            @click="activeTab = tab.id"
-        >
-          {{ tab.icon }} {{ tab.label }}
-        </a>
-      </div>
-      <div>
-        <div v-if="activeTab === 'skin'" class="space-y-4">
-          <div
-              v-for="skinType in skinTypes"
-              :key="skinType.name"
-              class="collapse collapse-arrow bg-white shadow-md"
-          >
-            <input type="radio" :name="'skin-accordion'" />
-            <div class="collapse-title text-lg font-semibold flex items-center gap-2">
-              <span class="text-2xl">{{ skinType.icon }}</span>
-              {{ skinType.name }}
-            </div>
-            <div class="collapse-content">
-              <p class="text-base-content/80">{{ skinType.description }}</p>
-            </div>
-          </div>
-        </div>
-        <div v-if="activeTab === 'texture'" class="grid md:grid-cols-2 gap-4">
-          <div
-              v-for="texture in textures"
-              :key="texture.name"
-              class="card bg-white shadow-md hover:shadow-xl transition-all"
-          >
-            <div class="card-body">
-              <h3 class="card-title text-secondary">
-                {{ texture.icon }} {{ texture.name }}
-              </h3>
-              <p class="text-base-content/80">{{ texture.description }}</p>
-              <div class="badge badge-outline badge-primary mt-2">
-                {{ texture.recommendation }}
-              </div>
-            </div>
-          </div>
-        </div>
-        <div v-if="activeTab === 'ingredients'" class="grid md:grid-cols-2 gap-4">
-          <div
-              v-for="ingredient in ingredients"
-              :key="ingredient.name"
-              class="card bg-white shadow-md hover:shadow-xl transition-all"
-          >
-            <div class="card-body">
-              <h3 class="card-title text-accent">
-                {{ ingredient.icon }} {{ ingredient.name }}
-              </h3>
-              <p class="text-sm text-base-content/80 mb-2">{{ ingredient.benefit }}</p>
-              <div class="badge badge-outline badge-secondary">
-                Cocok untuk: {{ ingredient.suitable }}
-              </div>
-            </div>
-          </div>
+
+      <div v-if="activeTab === 'texture'" class="grid md:grid-cols-2 gap-4">
+        <div v-for="texture in textures" :key="texture.name" class="p-6 bg-cream-100 rounded-lg">
+          <h3 class="font-bold text-xl text-peach-500 mb-2">{{ texture.icon }} {{ texture.name }}</h3>
+          <p class="text-content-light mb-3">{{ texture.description }}</p>
+          <span class="inline-block px-3 py-1 text-sm rounded-full border border-pink-300 text-pink-500">{{ texture.recommendation }}</span>
         </div>
       </div>
-      <div class="card-actions justify-center mt-8">
-        <button
-            @click="$emit('ready')"
-            class="btn btn-primary btn-lg gap-2 shadow-lg hover:shadow-xl"
-        >
-          <span>🚀</span>
-          Mulai Cari Rekomendasi Sekarang!
-        </button>
+
+      <div v-if="activeTab === 'ingredients'" class="grid md:grid-cols-2 gap-4">
+        <div v-for="ingredient in ingredients" :key="ingredient.name" class="p-6 bg-cream-100 rounded-lg">
+          <h3 class="font-bold text-xl text-peach-500 mb-2">{{ ingredient.icon }} {{ ingredient.name }}</h3>
+          <p class="text-sm text-content-light mb-3">{{ ingredient.benefit }}</p>
+          <span class="inline-block px-3 py-1 text-sm rounded-full border border-peach-300 text-peach-500">Cocok untuk: {{ ingredient.suitable }}</span>
+        </div>
       </div>
     </div>
   </div>
@@ -91,7 +55,6 @@ import { ref } from 'vue'
 defineEmits(['ready'])
 
 const activeTab = ref('skin')
-
 const tabs = [
   { id: 'skin', label: 'Tipe Kulit', icon: '🧴' },
   { id: 'texture', label: 'Tekstur', icon: '💧' },

@@ -14,41 +14,31 @@ module.exports = {
                 sans: ['Inter', 'system-ui', '-apple-system', 'sans-serif'],
                 display: ['Poppins', 'Inter', 'sans-serif'],
             },
+            colors: {
+                'pink': {
+                    50: '#FEF7F9',
+                    100: '#FCEEF0',
+                    200: '#F9E4E8',
+                    300: '#F8E2DC',
+                    400: '#F5C0A7',
+                    500: '#F4ABC4',
+                    600: '#D885A3',
+                },
+                'peach': {
+                    400: '#F5C0A7',
+                },
+                'cream': {
+                    50: '#FEF7F9',
+                    100: '#FCEEF0',
+                },
+                'content': {
+                    DEFAULT: '#4A3F3F',
+                    light: '#A49393',
+                },
+                'success': '#64B39A',
+                'error': '#D87777',
+            }
         },
     },
-    plugins: [
-        require('daisyui')
-    ],
-    daisyui: {
-        themes: [
-            {
-                mytheme: {
-                    "primary": "#ec4899",
-                    "primary-focus": "#db2777",
-                    "primary-content": "#ffffff",
-                    "secondary": "#f472b6",
-                    "secondary-focus": "#ec4899",
-                    "secondary-content": "#ffffff",
-                    "accent": "#fb7185",
-                    "accent-focus": "#f43f5e",
-                    "accent-content": "#ffffff",
-                    "neutral": "#3d4451",
-                    "neutral-focus": "#1f2937",
-                    "neutral-content": "#ffffff",
-                    "base-100": "#ffffff",
-                    "base-200": "#f9fafb",
-                    "base-300": "#f3f4f6",
-                    "base-content": "#1f2937",
-                    "info": "#3b82f6",
-                    "info-content": "#ffffff",
-                    "success": "#10b981",
-                    "success-content": "#ffffff",
-                    "warning": "#f59e0b",
-                    "warning-content": "#ffffff",
-                    "error": "#ef4444",
-                    "error-content": "#ffffff",
-                },
-            },
-        ],
-    },
+    plugins: [],
 }

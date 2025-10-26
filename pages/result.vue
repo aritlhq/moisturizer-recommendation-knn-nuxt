@@ -31,18 +31,18 @@
         </p>
       </div>
 
-      <div class="card bg-gradient-to-r from-primary/10 to-secondary/10 shadow-lg mb-10">
+      <div class="card bg-base-100 shadow-lg mb-10">
         <div class="card-body">
           <h3 class="card-title text-xl mb-4">Preferensi Kamu:</h3>
           <div class="flex flex-wrap gap-4">
-            <div class="badge badge-lg badge-primary">Tipe Kulit: {{ userInput?.skinType }}</div>
-            <div class="badge badge-lg badge-secondary">Tekstur: {{ userInput?.productType }}</div>
-            <div class="badge badge-lg badge-accent">Kandungan: {{ userInput?.mainIngredient }}</div>
+            <div class="badge badge-lg badge-primary text-primary-content">Tipe Kulit: {{ userInput?.skinType }}</div>
+            <div class="badge badge-lg badge-secondary text-secondary-content">Tekstur: {{ userInput?.productType }}</div>
+            <div class="badge badge-lg badge-accent text-accent-content">Kandungan: {{ userInput?.mainIngredient }}</div>
           </div>
         </div>
       </div>
 
-      <div class="grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-6 mb-10">
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-6 mb-10">
         <ProductCard
             v-for="(product, index) in recommendations"
             :key="product.id"

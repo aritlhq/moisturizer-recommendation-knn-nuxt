@@ -1,48 +1,48 @@
 <template>
-  <div class="card bg-base-100 shadow-2xl">
-    <div class="card-body">
-      <h2 class="card-title text-2xl font-bold text-primary justify-center mb-4">
+  <div class="bg-white rounded-2xl shadow-xl p-8">
+    <div class="text-center">
+      <h2 class="text-2xl font-bold text-pink-500 mb-2">
         🎯 Ceritakan Tentang Kulitmu
       </h2>
-      <p class="text-center text-base-content/70 mb-6">
+      <p class="text-content-light mb-8">
         Pilih preferensimu, dan kami akan merekomendasikan produk terbaik!
       </p>
-
-      <form @submit.prevent="handleSubmit" class="space-y-6">
-        <div class="form-control">
-          <label class="label"><span class="label-text font-semibold text-lg">Tipe Kulitmu</span></label>
-          <select v-model="form.skinType" class="select select-bordered w-full" required>
-            <option disabled value="">Pilih tipe kulit...</option>
-            <option v-for="type in options.skinTypes" :key="type" :value="type">{{ type }}</option>
-          </select>
-        </div>
-
-        <div class="form-control">
-          <label class="label"><span class="label-text font-semibold text-lg">Tekstur yang Diinginkan</span></label>
-          <div class="grid grid-cols-2 gap-4">
-            <label v-for="type in options.productTypes" :key="type" class="label cursor-pointer border-2 rounded-lg p-4 hover:border-primary transition-all" :class="{ 'border-primary bg-primary/10': form.productType === type, 'border-base-300': form.productType !== type }">
-              <input type="radio" :value="type" v-model="form.productType" class="radio radio-primary" required />
-              <span class="label-text font-semibold">{{ type }}</span>
-            </label>
-          </div>
-        </div>
-
-        <div class="form-control">
-          <label class="label"><span class="label-text font-semibold text-lg">Kandungan Utama</span></label>
-          <select v-model="form.mainIngredient" class="select select-bordered w-full" required>
-            <option disabled value="">Pilih kandungan...</option>
-            <option v-for="ingredient in options.mainIngredients" :key="ingredient" :value="ingredient">{{ ingredient }}</option>
-          </select>
-        </div>
-
-        <div class="form-control mt-8">
-          <button type="submit" class="btn btn-lg btn-primary w-full" :disabled="loading">
-            <span v-if="loading" class="loading loading-spinner"></span>
-            <span v-else>Cari Rekomendasi</span>
-          </button>
-        </div>
-      </form>
     </div>
+
+    <form @submit.prevent="handleSubmit" class="space-y-6">
+      <div>
+        <label class="block text-lg font-semibold text-content mb-2">Tipe Kulitmu</label>
+        <select v-model="form.skinType" class="select-bordered" required>
+          <option disabled value="">Pilih tipe kulit...</option>
+          <option v-for="type in options.skinTypes" :key="type" :value="type">{{ type }}</option>
+        </select>
+      </div>
+
+      <div>
+        <label class="block text-lg font-semibold text-content mb-2">Tekstur yang Diinginkan</label>
+        <div class="grid grid-cols-2 gap-4">
+          <label v-for="type in options.productTypes" :key="type" class="relative flex items-center p-4 border-2 rounded-lg cursor-pointer transition-all" :class="form.productType === type ? 'border-pink-500 bg-pink-50' : 'border-gray-300'">
+            <input type="radio" :value="type" v-model="form.productType" class="sr-only" required />
+            <span class="font-semibold text-content">{{ type }}</span>
+          </label>
+        </div>
+      </div>
+
+      <div>
+        <label class="block text-lg font-semibold text-content mb-2">Kandungan Utama</label>
+        <select v-model="form.mainIngredient" class="select-bordered" required>
+          <option disabled value="">Pilih kandungan...</option>
+          <option v-for="ingredient in options.mainIngredients" :key="ingredient" :value="ingredient">{{ ingredient }}</option>
+        </select>
+      </div>
+
+      <div class="pt-4">
+        <button type="submit" class="w-full bg-pink-500 text-white font-bold py-4 px-6 rounded-lg hover:bg-pink-600 transition-colors disabled:bg-pink-300 flex items-center justify-center" :disabled="loading">
+          <span v-if="loading" class="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></span>
+          <span v-else>Cari Rekomendasi</span>
+        </button>
+      </div>
+    </form>
   </div>
 </template>
 

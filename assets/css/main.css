@@ -6,7 +6,7 @@
 
 @layer base {
     body {
-        @apply font-sans text-base-content antialiased;
+        @apply font-sans text-content bg-cream-100;
         font-feature-settings: 'cv11', 'ss01';
     }
 
@@ -15,6 +15,21 @@
     }
 
     *:focus-visible {
-        @apply outline-2 outline-offset-2 outline-primary;
+        @apply outline-2 outline-offset-2 outline-pink-500;
+    }
+}
+
+@layer components {
+    .input-bordered {
+        @apply w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-300 focus:border-pink-500 transition-shadow;
+    }
+    .select-bordered {
+        @apply w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-300 focus:border-pink-500 transition-shadow appearance-none bg-white bg-no-repeat;
+        background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");
+        background-position: right 0.5rem center;
+        background-size: 1.5em 1.5em;
+    }
+    .table-zebra tbody tr:nth-child(odd) {
+        @apply bg-cream-50;
     }
 }
