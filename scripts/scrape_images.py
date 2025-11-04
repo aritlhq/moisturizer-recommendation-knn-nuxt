@@ -59,12 +59,18 @@ def main():
     with open(products_json_path, 'r', encoding='utf-8') as f:
         products = json.load(f)
 
+    # products = products[:5]
+
     print(f"Memulai scraping untuk {len(products)} produk...")
 
     products_with_images = []
     for i, product in enumerate(products):
-        print(f"({i+1}/{len(products)}) Scraping: {product['name'][:50]}...")
+        print(f"({i+1}/{len(products)}) Scraping: {product['name'][:50]}...", flush=True)
         image_url = get_image_url(product['product_url'])
+        if image_url:
+            print(f"  -> Sukses: Gambar ditemukan.", flush=True)
+        else:
+            print(f"  -> Gagal: Gambar tidak ditemukan.", flush=True)
 
         product['image_url'] = image_url
         products_with_images.append(product)

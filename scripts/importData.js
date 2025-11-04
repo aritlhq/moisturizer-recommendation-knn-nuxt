@@ -3,10 +3,8 @@ import path from 'path';
 import mysql from 'mysql2/promise';
 import 'dotenv/config';
 import { fileURLToPath } from 'url';
-import { exec } from 'child_process';
+import { spawn } from 'child_process';
 import util from 'util';
-
-const execPromise = util.promisify(exec);
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -35,19 +33,26 @@ async function runPythonScraper() {
     const pythonPath = process.env.NUXT_PYTHON_PATH || 'python';
     const scraperScript = path.join(__dirname, 'scrape_images.py');
 
-    try {
-        // TAMBAHKAN "-u" DI SINI
-        const { stdout, stderr } = await execPromise(`"${pythonPath}" -u "${scraperScript}"`);
-        if (stderr) {
-            console.error('⚠️  Peringatan dari skrip Python:', stderr);
-        }
-        console.log(stdout);
-        console.log('✅ Skrip Python scraping gambar selesai.');
-        return true;
-    } catch (error) {
-        console.error('❌ Gagal menjalankan skrip Python:', error);
-        return false;
-    }
+    return new Promise((resolve, reject) => {
+        const pythonProcess = spawn(pythonPath, ['-u', scraperScript], {
+            stdio: 'inherit'
+        });
+
+        pythonProcess.on('close', (code) => {
+            if (code === 0) {
+                console.log('\n✅ Skrip Python scraping gambar selesai.');
+                resolve(true);
+            } else {
+                console.error(`\n❌ Skrip Python keluar dengan kode error: ${code}`);
+                resolve(false);
+            }
+        });
+
+        pythonProcess.on('error', (err) => {
+            console.error('❌ Gagal menjalankan proses Python:', err);
+            reject(err);
+        });
+    });
 }
 
 async function updateDatabaseWithImages(pool) {
