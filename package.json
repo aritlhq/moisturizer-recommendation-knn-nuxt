@@ -10,7 +10,7 @@
     "postinstall": "nuxt prepare",
     "import-data": "node scripts/importData.js",
     "create-admin": "node scripts/createAdmin.js",
-    "setup-ml": "cd scripts && python train_model.py"
+    "setup-ml": "cd scripts && cmd /c run_training.bat"
   },
   "dependencies": {
     "@pinia/nuxt": "^0.11.2",
