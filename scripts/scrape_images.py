@@ -59,8 +59,6 @@ def main():
     with open(products_json_path, 'r', encoding='utf-8') as f:
         products = json.load(f)
 
-    # products = products[:5]
-
     print(f"Memulai scraping untuk {len(products)} produk...")
 
     products_with_images = []
