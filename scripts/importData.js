@@ -4,29 +4,9 @@ import mysql from 'mysql2/promise';
 import 'dotenv/config';
 import { fileURLToPath } from 'url';
 import { spawn } from 'child_process';
-import util from 'util';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
-
-// async function runPythonScraper() {
-//     console.log('\n🤖 Menjalankan skrip Python untuk scraping gambar...');
-//     const pythonPath = process.env.NUXT_PYTHON_PATH || 'python';
-//     const scraperScript = path.join(__dirname, 'scrape_images.py');
-//
-//     try {
-//         const { stdout, stderr } = await execPromise(`"${pythonPath}" "${scraperScript}"`);
-//         if (stderr) {
-//             console.error('⚠️  Peringatan dari skrip Python:', stderr);
-//         }
-//         console.log(stdout);
-//         console.log('✅ Skrip Python scraping gambar selesai.');
-//         return true;
-//     } catch (error) {
-//         console.error('❌ Gagal menjalankan skrip Python:', error);
-//         return false;
-//     }
-// }
 
 async function runPythonScraper() {
     console.log('\n🤖 Menjalankan skrip Python untuk scraping gambar...');
@@ -169,7 +149,6 @@ async function importData() {
         fs.writeFileSync(productsJsonPath, JSON.stringify(products, null, 2), 'utf-8');
         console.log(`✅ products.json berhasil dibuat (${products.length} produk)\n`);
 
-        // --- TAHAP BARU: SCRAPING DAN UPDATE ---
         const scraperSuccess = await runPythonScraper();
         if (scraperSuccess) {
             await updateDatabaseWithImages(pool);

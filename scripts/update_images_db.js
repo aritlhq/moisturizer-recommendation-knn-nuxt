@@ -24,7 +24,6 @@ async function updateDatabaseWithImages(pool) {
     }
 
     console.log(`💡 Menemukan ${productsWithImages.length} produk di file JSON. Memulai proses update...`);
-    // LOG CONTOH DATA PERTAMA
     console.log('👀 Contoh data pertama dari JSON:', productsWithImages[0]);
 
 
@@ -38,7 +37,6 @@ async function updateDatabaseWithImages(pool) {
                     'UPDATE products SET image_url = ? WHERE id = ?',
                     [product.image_url, product.id]
                 );
-                // LOG HASIL UPDATE
                 if (result.affectedRows > 0) {
                     updatedCount++;
                 } else {
