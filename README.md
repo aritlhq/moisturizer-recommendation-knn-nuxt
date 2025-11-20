@@ -63,7 +63,7 @@ cd moisturizer-recommendation-knn-nuxt
     NUXT_DB_HOST=localhost
     NUXT_DB_PORT=3306
     NUXT_DB_USER=root
-    NUXT_DB_PASSWORD= # <-- ISI DENGAN PASSWORD MYSQL ANDA (untuk XAMPP standar, biasanya kosong)
+    NUXT_DB_PASSWORD= # <-- ISI DENGAN PASSWORD MYSQL (untuk XAMPP standar, biasanya kosong)
     NUXT_DB_NAME=moisturizer_db
     
     # Kunci Rahasia JWT
