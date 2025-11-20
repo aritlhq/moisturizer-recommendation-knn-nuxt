@@ -149,10 +149,20 @@ async function importData() {
         fs.writeFileSync(productsJsonPath, JSON.stringify(products, null, 2), 'utf-8');
         console.log(`✅ products.json berhasil dibuat (${products.length} produk)\n`);
 
-        const scraperSuccess = await runPythonScraper();
-        if (scraperSuccess) {
+        // --- PERUBAHAN DIMULAI DI SINI ---
+        const imagesJsonPath = path.join(__dirname, 'products_with_images.json');
+
+        if (fs.existsSync(imagesJsonPath)) {
+            console.log('📦 File products_with_images.json sudah ada, proses scraping gambar dilewati.');
             await updateDatabaseWithImages(pool);
+        } else {
+            console.log('🖼️ File products_with_images.json tidak ditemukan, memulai proses scraping.');
+            const scraperSuccess = await runPythonScraper();
+            if (scraperSuccess) {
+                await updateDatabaseWithImages(pool);
+            }
         }
+        // --- PERUBAHAN SELESAI DI SINI ---
 
     } catch (error) {
         console.error('\n❌ Proses import/scraping gagal total:', error);
