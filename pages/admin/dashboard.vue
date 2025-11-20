@@ -146,25 +146,32 @@ const handleSave = async () => {
   const method = editMode.value ? 'PUT' : 'POST';
   const url = editMode.value ? `/api/products/${formData.value.id}` : '/api/products';
 
-  try {
-    await $fetch(url, { method, body: formData.value });
+  const { error } = await useApiFetch(url, {
+    method,
+    body: formData.value,
+  });
+
+  if (error.value) {
+    toast.error(error.value.data?.statusMessage || 'Gagal menyimpan produk');
+  } else {
     toast.success(`Produk berhasil ${editMode.value ? 'diupdate' : 'ditambahkan'}`);
     refresh();
     closeModal();
-  } catch (err) {
-    toast.error(err.data?.statusMessage || 'Gagal menyimpan produk');
   }
 };
 
 const handleDelete = async (product) => {
   if (!confirm(`Apakah Anda yakin ingin menghapus "${product.name}"?`)) return;
 
-  try {
-    await $fetch(`/api/products/${product.id}`, { method: 'DELETE' });
+  const { error } = await useApiFetch(`/api/products/${product.id}`, {
+    method: 'DELETE'
+  });
+
+  if (error.value) {
+    toast.error(error.value.data?.statusMessage || 'Gagal menghapus produk');
+  } else {
     toast.success('Produk berhasil dihapus');
     refresh();
-  } catch (err) {
-    toast.error(err.data?.statusMessage || 'Gagal menghapus produk');
   }
 };
 </script>
