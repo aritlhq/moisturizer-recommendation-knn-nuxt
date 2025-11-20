@@ -24,21 +24,26 @@ def get_image_url(product_url):
             'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
         }
         response = requests.get(product_url, headers=headers, timeout=10)
-        response.raise_for_status() # Akan error jika status code bukan 200
+        response.raise_for_status()
 
         soup = BeautifulSoup(response.text, 'html.parser')
 
-        # Mencari div dengan class yang spesifik seperti pola yang Anda berikan
-        image_wrapper = soup.find('div', class_='image-wrapper')
+        og_image = soup.find('meta', property='og:image')
+        if og_image and og_image.get('content'):
+            image_src = og_image['content']
+            if image_src.startswith('//'):
+                return 'https:' + image_src
+            return image_src
 
+        image_wrapper = soup.find('div', class_='image-wrapper')
         if image_wrapper:
             img_tag = image_wrapper.find('img')
             if img_tag and 'src' in img_tag.attrs:
                 image_src = img_tag['src']
-                # Memastikan URL memiliki protokol https
                 if image_src.startswith('//'):
                     return 'https:' + image_src
                 return image_src
+
         return None
     except requests.exceptions.RequestException as e:
         print(f" Gagal mengambil {product_url}: {e}", file=sys.stderr)
