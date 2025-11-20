@@ -8,62 +8,115 @@ import { spawn } from 'child_process';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-async function runPythonScraper() {
-    console.log('\n🤖 Menjalankan skrip Python untuk scraping gambar...');
-    const pythonPath = process.env.NUXT_PYTHON_PATH || 'python';
-    const scraperScript = path.join(__dirname, 'scrape_images.py');
+async function importFromCsvAndScrape(pool) {
+    console.log('🔄 Memulai import dari dataset.csv dan proses scraping...');
 
-    return new Promise((resolve, reject) => {
-        const pythonProcess = spawn(pythonPath, ['-u', scraperScript], {
-            stdio: 'inherit'
-        });
-
-        pythonProcess.on('close', (code) => {
-            if (code === 0) {
-                console.log('\n✅ Skrip Python scraping gambar selesai.');
-                resolve(true);
-            } else {
-                console.error(`\n❌ Skrip Python keluar dengan kode error: ${code}`);
-                resolve(false);
-            }
-        });
-
-        pythonProcess.on('error', (err) => {
-            console.error('❌ Gagal menjalankan proses Python:', err);
-            reject(err);
-        });
-    });
-}
-
-async function updateDatabaseWithImages(pool) {
-    console.log('\n🔄 Memperbarui database dengan URL gambar...');
-    const imagesJsonPath = path.join(__dirname, 'products_with_images.json');
-
-    if (!fs.existsSync(imagesJsonPath)) {
-        console.error('❌ File products_with_images.json tidak ditemukan. Scraping mungkin gagal.');
-        return;
+    const csvPath = path.join(process.cwd(), 'dataset.csv');
+    if (!fs.existsSync(csvPath)) {
+        throw new Error('❌ File dataset.csv tidak ditemukan di root proyek!');
     }
 
+    const csvContent = fs.readFileSync(csvPath, 'utf-8');
+    const lines = csvContent.split('\n');
+    const dataLines = lines.slice(1).filter(line => line.trim());
+
+    console.log(`📊 Total baris data: ${dataLines.length}`);
+
+    let successCount = 0;
+    let errorCount = 0;
+
+    console.log('📥 Mulai import data dasar (tanpa gambar)...');
+    for (const line of dataLines) {
+        try {
+            const parts = line.trim().split(';');
+            if (parts.length < 4) continue;
+
+            const type = parts[0].trim();
+            const name = parts[1].trim();
+            const brand = parts[2].trim();
+            const lastPartSplit = parts[3].split(',');
+
+            if (lastPartSplit.length < 3) continue;
+
+            const link = lastPartSplit[0].trim();
+            const skinType = lastPartSplit[1].trim();
+            const ingredient = lastPartSplit[2].trim();
+
+            if (!type || !name || !brand || !skinType || !ingredient) {
+                errorCount++;
+                continue;
+            }
+
+            await pool.query(
+                'INSERT INTO products (name, brand, product_type, skin_type, main_ingredient, product_url) VALUES (?, ?, ?, ?, ?, ?)',
+                [name, brand, type, skinType, ingredient, link]
+            );
+            successCount++;
+        } catch (rowError) {
+            errorCount++;
+        }
+    }
+    console.log(`\n✅ Import data dasar selesai! Berhasil: ${successCount}, Gagal: ${errorCount}`);
+
+    console.log('\n📤 Membuat products.json untuk proses scraping...');
+    const [products] = await pool.query('SELECT id, name, brand, product_type, skin_type, main_ingredient, product_url FROM products ORDER BY id ASC');
+    const productsJsonPath = path.join(__dirname, 'products.json');
+    fs.writeFileSync(productsJsonPath, JSON.stringify(products, null, 2), 'utf-8');
+    console.log(`✅ products.json berhasil dibuat dengan ${products.length} produk.`);
+
+    console.log('\n🤖 Menjalankan skrip Python untuk scraping gambar (proses ini akan lama)...');
+    const scraperScript = path.join(__dirname, 'scrape_images.py');
+    const pythonPath = process.env.NUXT_PYTHON_PATH || 'python';
+
+    await new Promise((resolve, reject) => {
+        const pythonProcess = spawn(pythonPath, ['-u', scraperScript], { stdio: 'inherit' });
+        pythonProcess.on('close', code => code === 0 ? resolve() : reject(new Error(`Proses scraping gagal dengan kode ${code}`)));
+        pythonProcess.on('error', err => reject(err));
+    });
+
+    console.log('\n🔄 Memperbarui database dengan URL gambar yang telah di-scrape...');
+    const imagesJsonPath = path.join(__dirname, 'products_with_images.json');
     const productsWithImages = JSON.parse(fs.readFileSync(imagesJsonPath, 'utf-8'));
 
     let updatedCount = 0;
     for (const product of productsWithImages) {
         if (product.id && product.image_url) {
-            try {
-                await pool.query(
-                    'UPDATE products SET image_url = ? WHERE id = ?',
-                    [product.image_url, product.id]
-                );
-                updatedCount++;
-            } catch (error) {
-                console.error(`Gagal update produk ID ${product.id}:`, error);
-            }
+            await pool.query('UPDATE products SET image_url = ? WHERE id = ?', [product.image_url, product.id]);
+            updatedCount++;
         }
     }
-    console.log(`✅ ${updatedCount} dari ${productsWithImages.length} produk berhasil diperbarui dengan URL gambar.`);
+    console.log(`✅ ${updatedCount} produk berhasil diperbarui dengan URL gambar.`);
 }
 
-async function importData() {
+async function importFromJson(pool, jsonPath) {
+    console.log('📦 Mengisi database langsung dari products_with_images.json (proses cepat)...');
+    const productsToInsert = JSON.parse(fs.readFileSync(jsonPath, 'utf-8'));
+
+    if (productsToInsert.length === 0) {
+        throw new Error('File products_with_images.json kosong atau tidak valid.');
+    }
+
+    let successCount = 0;
+    for (const product of productsToInsert) {
+        await pool.query(
+            'INSERT INTO products (id, name, brand, product_type, skin_type, main_ingredient, product_url, image_url) VALUES (?, ?, ?, ?, ?, ?, ?, ?)',
+            [
+                product.id,
+                product.name,
+                product.brand,
+                product.product_type,
+                product.skin_type,
+                product.main_ingredient,
+                product.product_url,
+                product.image_url
+            ]
+        );
+        successCount++;
+    }
+    console.log(`✅ Berhasil mengimpor ${successCount} produk dari file JSON.`);
+}
+
+async function main() {
     let pool;
     try {
         pool = mysql.createPool({
@@ -72,104 +125,31 @@ async function importData() {
             user: process.env.NUXT_DB_USER,
             password: process.env.NUXT_DB_PASSWORD,
             database: process.env.NUXT_DB_NAME,
-            waitForConnections: true,
-            connectionLimit: 10,
-            queueLimit: 0,
         });
 
-        console.log('🔄 Memulai import data dari dataset.csv...\n');
-
-        const csvPath = path.join(process.cwd(), 'dataset.csv');
-
-        if (!fs.existsSync(csvPath)) {
-            console.error('❌ File dataset.csv tidak ditemukan di root proyek!');
-            process.exit(1);
-        }
-
-        const csvContent = fs.readFileSync(csvPath, 'utf-8');
-        const lines = csvContent.split('\n');
-        const dataLines = lines.slice(1).filter(line => line.trim());
-
-        console.log(`📊 Total baris data: ${dataLines.length}\n`);
-
-        let successCount = 0;
-        let errorCount = 0;
-
-        console.log('🗑️  Menghapus data lama...');
-        await pool.query('DELETE FROM products');
-        console.log('✅ Data lama berhasil dihapus\n');
-
-        console.log('📥 Mulai import data...');
-
-        for (let i = 0; i < dataLines.length; i++) {
-            const line = dataLines[i].trim();
-            if (!line) continue;
-
-            try {
-                const parts = line.split(';');
-
-                if (parts.length >= 4) {
-                    const type = parts[0].trim();
-                    const name = parts[1].trim();
-                    const brand = parts[2].trim();
-                    const lastPartSplit = parts[3].split(',');
-
-                    if (lastPartSplit.length >= 3) {
-                        const link = lastPartSplit[0].trim();
-                        const skinType = lastPartSplit[1].trim();
-                        const ingredient = lastPartSplit[2].trim();
-
-                        if (!type || !name || !brand || !skinType || !ingredient || type.length > 100) {
-                            errorCount++;
-                            continue;
-                        }
-
-                        await pool.query(
-                            'INSERT INTO products (name, brand, product_type, skin_type, main_ingredient, product_url, image_url) VALUES (?, ?, ?, ?, ?, ?, ?)',
-                            [name, brand, type, skinType, ingredient, link, null]
-                        );
-                        successCount++;
-                    }
-                }
-            } catch (rowError) {
-                errorCount++;
-            }
-        }
-
-        console.log('\n✅ Import data dasar selesai!');
-        console.log(`   - Berhasil: ${successCount} produk`);
-        console.log(`   - Gagal: ${errorCount} baris\n`);
-
-        console.log('📤 Membuat products.json untuk ML model...');
-        const [products] = await pool.query(
-            'SELECT id, name, brand, product_type, skin_type, main_ingredient, product_url FROM products ORDER BY id ASC'
-        );
-
-        const productsJsonPath = path.join(__dirname, 'products.json');
-        fs.writeFileSync(productsJsonPath, JSON.stringify(products, null, 2), 'utf-8');
-        console.log(`✅ products.json berhasil dibuat (${products.length} produk)\n`);
-
-        // --- PERUBAHAN DIMULAI DI SINI ---
         const imagesJsonPath = path.join(__dirname, 'products_with_images.json');
 
+        console.log('🗑️  Menghapus data lama dari tabel products...');
+        await pool.query('DELETE FROM products');
+        console.log('✅ Data lama berhasil dihapus.');
+
         if (fs.existsSync(imagesJsonPath)) {
-            console.log('📦 File products_with_images.json sudah ada, proses scraping gambar dilewati.');
-            await updateDatabaseWithImages(pool);
+            // Skenario cepat untuk client
+            await importFromJson(pool, imagesJsonPath);
         } else {
-            console.log('🖼️ File products_with_images.json tidak ditemukan, memulai proses scraping.');
-            const scraperSuccess = await runPythonScraper();
-            if (scraperSuccess) {
-                await updateDatabaseWithImages(pool);
-            }
+            // Skenario lambat untuk developer (setup awal)
+            console.log('🖼️ File products_with_images.json tidak ditemukan.');
+            await importFromCsvAndScrape(pool);
         }
-        // --- PERUBAHAN SELESAI DI SINI ---
+
+        console.log('\n✨ Proses import data selesai sepenuhnya!');
 
     } catch (error) {
-        console.error('\n❌ Proses import/scraping gagal total:', error);
+        console.error('\n❌ Proses import gagal total:', error);
     } finally {
         if (pool) await pool.end();
         process.exit(0);
     }
 }
 
-importData();
+main();
