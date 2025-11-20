@@ -29,7 +29,7 @@ Sebelum memulai, pastikan perangkat lunak berikut telah terpasang di sistem Wind
 1.  **Node.js**: Versi 18.x atau yang lebih baru.
 2.  **Python**: Versi 3.8 atau yang lebih baru. Pastikan untuk mencentang opsi **"Add Python to PATH"** saat proses instalasi.
 3.  **XAMPP**: Untuk server Apache dan database MySQL. Alternatif lain seperti Laragon atau instalasi MySQL manual juga dapat digunakan.
-4.  **Git**: Untuk mengkloning repositori.
+4.  **Git**: Untuk mengkloning repositori (opsional).
 
 ## Panduan Instalasi dan Pengaturan
 
@@ -37,12 +37,7 @@ Ikuti langkah-langkah berikut untuk menjalankan proyek ini di komputer lokal kam
 
 ### 1. Mengunduh Repositori
 
-Buka Command Prompt atau Git Bash, lalu kloning repositori ini ke direktori yang kamu inginkan.
-
-```bash
-git clone https://github.com/aritlhq/moisturizer-recommendation-knn-nuxt.git
-cd moisturizer-recommendation-knn-nuxt
-```
+Buka Command Prompt atau Git Bash, lalu kloning repositori ini ke direktori yang kamu inginkan, atau bisa unduh proyeknya.
 
 ### 2. Pengaturan Database MySQL
 
