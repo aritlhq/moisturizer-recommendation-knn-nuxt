@@ -25,7 +25,7 @@
           <div class="grid md:grid-cols-2 gap-4">
             <div>
               <p class="font-semibold text-content">Peneliti:</p>
-              <p class="text-content-light">[ Nama Mahasiswa ]</p>
+              <p class="text-content-light">Jannibatur Aiman</p>
             </div>
             <div>
               <p class="font-semibold text-content">Institusi:</p>

@@ -31,7 +31,7 @@
       <div class="space-y-2">
         <p class="font-bold text-lg text-content">Moisturizer Finder 💧</p>
         <p>Sistem Rekomendasi Moisturizer menggunakan Algoritma KNN</p>
-        <p class="text-sm opacity-80 mt-4">© 2025 [ Nama Mahasiswa ] - Universitas Pamulang</p>
+        <p class="text-sm opacity-80 mt-4">© 2025 Jannibatur Aiman - Universitas Pamulang</p>
       </div>
     </footer>
 
